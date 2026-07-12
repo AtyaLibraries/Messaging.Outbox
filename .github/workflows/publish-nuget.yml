@@ -19,7 +19,7 @@ jobs:
         env:
           SOURCE_REPOSITORY: ${{ github.repository }}
           SOURCE_REF: ${{ github.ref_name }}
-          SOURCE_SOLUTION: ./Outbox.sln
+          SOURCE_SOLUTION: ./Messaging.Outbox.sln
           SOURCE_PACKAGE_PROJECT: ./src/Outbox/Outbox.csproj
         with:
           github-token: ${{ secrets.PUBLISHER_DISPATCH_TOKEN }}

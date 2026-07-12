@@ -1,110 +1,68 @@
-<!-- After adding real code, run the Atya per-repo README Standardization prompt to fill real examples. -->
 # Atya.Messaging.Outbox
 
-*Transactional outbox store and relay primitives for reliable Atya messaging.*
+Transactional outbox store and relay primitives for reliable Atya messaging.
 
-[![NuGet Version](https://img.shields.io/nuget/v/Atya.Messaging.Outbox?style=for-the-badge&logo=nuget&logoColor=white&label=NuGet&color=512BD4)](https://www.nuget.org/packages/Atya.Messaging.Outbox)
-[![Downloads](https://img.shields.io/nuget/dt/Atya.Messaging.Outbox?style=for-the-badge&logo=nuget&logoColor=white&label=Downloads&color=512BD4)](https://www.nuget.org/packages/Atya.Messaging.Outbox)
-![.NET 10.0](https://img.shields.io/badge/.NET_10.0-512BD4?style=for-the-badge&logo=dotnet&logoColor=white)
-[![License: MIT](https://img.shields.io/badge/License-MIT-512BD4?style=for-the-badge)](https://github.com/AtyaLibraries/Atya.Messaging.Outbox/blob/development/LICENSE)
+[![NuGet](https://img.shields.io/nuget/v/Atya.Messaging.Outbox)](https://www.nuget.org/packages/Atya.Messaging.Outbox)
+[![Build](https://github.com/AtyaLibraries/Messaging.Outbox/actions/workflows/ci.yml/badge.svg?branch=development)](https://github.com/AtyaLibraries/Messaging.Outbox/actions)
 
-## 📖 Overview
+## Overview
 
-Transactional outbox store and relay primitives for reliable Atya messaging. <!-- TODO: expand to 2-4 sentences once the package has real scope. -->
+`Atya.Messaging.Outbox` captures messages in an outbox store through the existing `IMessagePublisher<TMessage>` contract, then relays pending messages through a transport publisher later. The package includes contracts, serialization helpers, an in-memory store for tests and simple hosts, and a relay that preserves message id, correlation id, headers, and runtime message type. Repeated publish failures are retried until the configured attempt budget is exhausted, then the message is marked `Failed` and is no longer loaded by the relay.
 
-## ✨ Features
+Entity Framework and broker-specific providers are intentionally out of scope for this package.
 
-- **Focused API** — Replace with the package's primary capability. <!-- TODO -->
-- **Modern .NET integration** — Replace with the package's runtime or framework fit. <!-- TODO -->
-- **Production-ready packaging** — Replace with the package's reliability or operations story. <!-- TODO -->
+## Installation
 
-## 📦 Installation
-
-**.NET CLI**
 ```bash
 dotnet add package Atya.Messaging.Outbox
 ```
 
-**Package Manager**
-```powershell
-Install-Package Atya.Messaging.Outbox
-```
+## Quick Start
 
-**PackageReference**
-```xml
-<PackageReference Include="Atya.Messaging.Outbox" Version="<latest-stable>" />
-```
-
-## 🚀 Quick Start
-
-<!-- TODO: replace this scaffold example with your package's real API. -->
 ```csharp
+using Atya.Foundation.Time;
+using Atya.Messaging.Abstractions;
 using Atya.Messaging.Outbox;
 
-var assembly = typeof(OutboxMarker).Assembly;
-Console.WriteLine($"{assembly.GetName().Name} is ready.");
+var store = new InMemoryOutboxStore();
+var clock = new SystemClock();
+var outboxPublisher = new OutboxPublisher<OrderSubmitted>(store, clock);
+
+await outboxPublisher.PublishAsync(
+    new OrderSubmitted("order-123"),
+    new MessagePublishOptions(
+        messageId: "message-123",
+        correlationId: "correlation-123"));
+
+IMessagePublisher transportPublisher = /* adapter implemented by a transport package */;
+var relay = new OutboxRelay(store, transportPublisher, clock, maxAttempts: 3);
+OutboxRelayResult result = await relay.PublishPendingAsync(maxCount: 100);
+
+public sealed record OrderSubmitted(string OrderId);
 ```
 
-## 📚 Usage
+## Public Surface
 
-Add real usage examples once the package API is implemented. <!-- TODO -->
+- `IOutboxStore` stores pending messages and records publish outcomes. Durable implementations must participate in the caller's transaction.
+- `OutboxMessage` represents a serialized message, metadata, status, and retry state.
+- `OutboxMessageStatus` has `Pending`, `Published`, and terminal `Failed` states.
+- `OutboxMessageSerializer` serializes `MessageEnvelope<TMessage>` values and restores runtime payloads from assembly-qualified type names using Atya Foundation serialization defaults unless options are supplied.
+- `OutboxPublisher<TMessage>` implements `IMessagePublisher<TMessage>` by writing to the outbox.
+- `OutboxRelay` republishes pending outbox messages through the type-erased `IMessagePublisher` contract and marks messages terminally failed after `maxAttempts`.
+- `InMemoryOutboxStore` provides an in-memory implementation for tests, samples, and simple hosts.
 
-## 🗂️ Project Structure
-
-| Icon | Meaning |
-|------|---------|
-| 📦 | Solution / repo root (`.sln`) |
-| 📂 `src` | Library source code (the published package) |
-| 🧪 `tests` | Unit & integration tests |
-| 🎯 `samples` | Runnable usage samples |
-| ⚡ `benchmarks` | Performance benchmarks |
-| ⚙️ `.github` | CI/CD & repo config |
-| 📄 | Notable single file |
-
-```text
-📦 Atya.Messaging.Outbox
-├── 📂 src
-│   └── 📄 Outbox.csproj      # the published package
-├── 🧪 tests
-│   └── 📄 Outbox.UnitTests.csproj
-├── 🎯 samples
-│   └── 📄 Outbox.Samples.Console.csproj
-├── ⚡ benchmarks
-│   └── 📄 Outbox.Benchmarks.csproj
-├── ⚙️ .github/workflows
-├── 📄 Outbox.sln
-├── 📄 README.md
-└── 📄 LICENSE
-```
-
-## 🎯 Compatibility
-
-Targets `net10.0`.
-
-## 🧪 Testing
+## Testing
 
 ```bash
 dotnet test
 ```
 
-## ⚡ Benchmarks
+## Benchmarks
 
-Performance benchmarks live in `benchmarks/`. Run with `dotnet run -c Release` from the benchmark project.
+```bash
+dotnet run -c Release --project benchmarks/Outbox.Benchmarks
+```
 
-## 🤝 Contributing
+## License
 
-Contributions are welcome! Please open an issue or pull request on [GitHub](https://github.com/AtyaLibraries/Atya.Messaging.Outbox).
-
-## 📄 License
-
-Released under the **MIT** license. See [LICENSE](https://github.com/AtyaLibraries/Atya.Messaging.Outbox/blob/development/LICENSE) for details.
-
----
-
-## 🏛️ About Atya Libraries
-
-`Atya.Messaging.Outbox` is part of **[Atya Libraries](https://github.com/AtyaLibraries)** — a family of focused, modern .NET libraries published under the reserved **`Atya.*`** prefix on NuGet. Every package shares the same principles: a small, clear public API, full test coverage, and consistent documentation.
-
-🔎 Browse the full collection on [GitHub](https://github.com/AtyaLibraries) and [NuGet](https://www.nuget.org/profiles/ArsenAsulyan).
-
-Made with 💜 .NET · © 2026 Atya Libraries
+MIT. See [LICENSE](https://github.com/AtyaLibraries/Messaging.Outbox/blob/development/LICENSE).
