@@ -125,6 +125,79 @@ public sealed class OutboxTests
         messages.Select(message => message.Id).Should().Equal("a", "b");
     }
 
+    [Fact]
+    public async Task Store_Does_Not_Load_Published_Or_Failed_Messages()
+    {
+        var store = new InMemoryOutboxStore();
+        var cancellationToken = TestContext.Current.CancellationToken;
+        await store.AddAsync(CreateMessage("pending", 1), cancellationToken);
+        await store.AddAsync(CreateMessage("published", 2), cancellationToken);
+        await store.AddAsync(CreateMessage("failed", 3), cancellationToken);
+
+        await store.MarkPublishedAsync(
+            "published",
+            new DateTimeOffset(2026, 7, 12, 20, 1, 0, TimeSpan.Zero),
+            cancellationToken);
+        await store.MarkFailedAsync(
+            "failed",
+            new DateTimeOffset(2026, 7, 12, 20, 1, 0, TimeSpan.Zero),
+            "transport unavailable",
+            terminal: true,
+            cancellationToken);
+
+        var messages = await store.LoadPendingAsync(10, cancellationToken);
+
+        messages.Should().ContainSingle()
+            .Which.Id.Should().Be("pending");
+    }
+
+    [Fact]
+    public void Message_Copies_Empty_Headers_And_Normalizes_Blank_Correlation_And_Error()
+    {
+        var message = new OutboxMessage(
+            "message",
+            typeof(TestMessage).AssemblyQualifiedName!,
+            """{"name":"created"}""",
+            "message-1",
+            " ",
+            null,
+            new DateTimeOffset(2026, 7, 12, 20, 0, 0, TimeSpan.Zero),
+            lastError: " ");
+
+        message.CorrelationId.Should().BeNull();
+        message.Headers.Should().BeEmpty();
+        message.LastError.Should().BeNull();
+    }
+
+    [Fact]
+    public void Message_Requires_Utc_Timestamps()
+    {
+        var create = () => new OutboxMessage(
+            "message",
+            typeof(TestMessage).AssemblyQualifiedName!,
+            """{"name":"created"}""",
+            "message-1",
+            null,
+            null,
+            new DateTimeOffset(2026, 7, 12, 20, 0, 0, TimeSpan.FromHours(1)));
+
+        create.Should().Throw<ArgumentException>()
+            .WithMessage("The value must use a UTC offset.*");
+    }
+
+    [Fact]
+    public async Task Store_Rejects_Duplicate_Message_Ids()
+    {
+        var store = new InMemoryOutboxStore();
+        var cancellationToken = TestContext.Current.CancellationToken;
+        await store.AddAsync(CreateMessage("duplicate", 1), cancellationToken);
+
+        var addDuplicate = async () => await store.AddAsync(CreateMessage("duplicate", 2), cancellationToken);
+
+        await addDuplicate.Should().ThrowAsync<ArgumentException>()
+            .WithMessage("Outbox message 'duplicate' already exists.*");
+    }
+
     private static OutboxMessage CreateMessage(string id, int seconds)
         => new(
             id,
