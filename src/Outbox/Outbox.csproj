@@ -1,0 +1,36 @@
+<Project Sdk="Atya.Build.Sdk">
+
+  <PropertyGroup>
+    <AssemblyName>Atya.Messaging.Outbox</AssemblyName>
+    <PackageId>Atya.Messaging.Outbox</PackageId>
+    <RootNamespace>Atya.Messaging.Outbox</RootNamespace>
+    <IsPackable>true</IsPackable>
+    <Authors>Arsen Asulyan</Authors>
+    <Company>Atya</Company>
+    <Copyright>Copyright (c) 2026 Arsen Asulyan</Copyright>
+    <Description>Transactional outbox store and relay primitives for reliable Atya messaging.</Description>
+    <PackageTags>dotnet;atya;messaging;outbox;reliability</PackageTags>
+    <RepositoryUrl>https://github.com/AtyaLibraries/Messaging.Outbox</RepositoryUrl>
+    <PackageProjectUrl>$(RepositoryUrl)</PackageProjectUrl>
+    <!-- Set PackageValidationBaselineVersion to the last stable package version after first stable release. -->
+    <!-- <PackageValidationBaselineVersion>1.0.0</PackageValidationBaselineVersion> -->
+
+    <!-- MinVer derives the version from git tags (e.g. tag `v1.2.3` -> 1.2.3). -->
+    <MinVerTagPrefix>v</MinVerTagPrefix>
+    <MinVerDefaultPreReleaseIdentifiers>alpha.0</MinVerDefaultPreReleaseIdentifiers>
+    <NoWarn Condition="'$(RepositoryUrl)' != '' And $(RepositoryUrl.Contains('__'))">$(NoWarn);CA1707;SA1300</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="\" />
+    <None Include="..\..\LICENSE" Pack="true" PackagePath="\" Visible="false" />
+  </ItemGroup>
+
+  <ItemGroup Label="Runtime dependency">
+    <PackageReference Include="Atya.Foundation.Guards" />
+    <PackageReference Include="Atya.Foundation.Serialization" />
+    <PackageReference Include="Atya.Foundation.Time" />
+    <ProjectReference Include="..\..\..\Messaging.Abstractions\src\Abstractions\Abstractions.csproj" />
+  </ItemGroup>
+
+</Project>
