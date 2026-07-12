@@ -18,4 +18,4 @@ jobs:
   analyze:
     uses: AtyaLibraries/github-workflows/.github/workflows/codeql-csharp.yml@v1
     with:
-      solution: ./Outbox.sln
+      solution: ./Messaging.Outbox.sln
