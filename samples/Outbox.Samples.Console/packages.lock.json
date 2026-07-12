@@ -7,20 +7,13 @@
         "resolved": "1.0.4",
         "contentHash": "tGwyFAY17vXv76ioyK9LSH8wd/uuPw6HDjXTGl4vlxN1Yuxd+tZMxxEpqFnhyQcqbiplMQTpEuimu3f5PZq8Sg=="
       },
-      "Atya.Messaging.Abstractions": {
-        "type": "Project",
-        "dependencies": {
-          "Atya.Foundation.Abstractions": "[1.0.4, )",
-          "Atya.Foundation.Guards": "[1.0.2, )"
-        }
-      },
       "Atya.Messaging.Outbox": {
         "type": "Project",
         "dependencies": {
           "Atya.Foundation.Guards": "[1.0.2, )",
           "Atya.Foundation.Serialization": "[1.0.0, )",
           "Atya.Foundation.Time": "[1.0.0, )",
-          "Atya.Messaging.Abstractions": "[1.0.0, )"
+          "Atya.Messaging.Abstractions": "[1.1.0, )"
         }
       },
       "Atya.Foundation.Guards": {
@@ -40,6 +33,16 @@
         "requested": "[1.0.0, )",
         "resolved": "1.0.0",
         "contentHash": "tfr4e0DEQFrNpq0/bGULhKpFnqLfokWxRjGoo5Q+P3/wDpVMPzwzKovS3i/A2jYN4r4dZUXzgJFymF44kqQN0g=="
+      },
+      "Atya.Messaging.Abstractions": {
+        "type": "CentralTransitive",
+        "requested": "[1.1.0, )",
+        "resolved": "1.1.0",
+        "contentHash": "DG0hLQDqpShDBirsarn2eB1EfWBgJPTkoVPxbdS4PDtLDbVlglH62gIZtGb+CHf8MYOzq3xzvN5pU4WRT/u0ag==",
+        "dependencies": {
+          "Atya.Foundation.Abstractions": "1.0.4",
+          "Atya.Foundation.Guards": "1.0.2"
+        }
       }
     }
   }

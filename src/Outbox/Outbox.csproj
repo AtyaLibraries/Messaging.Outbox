@@ -30,7 +30,7 @@
     <PackageReference Include="Atya.Foundation.Guards" />
     <PackageReference Include="Atya.Foundation.Serialization" />
     <PackageReference Include="Atya.Foundation.Time" />
-    <ProjectReference Include="..\..\..\Messaging.Abstractions\src\Abstractions\Abstractions.csproj" />
+    <PackageReference Include="Atya.Messaging.Abstractions" />
   </ItemGroup>
 
 </Project>

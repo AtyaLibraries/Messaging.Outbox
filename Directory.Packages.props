@@ -7,7 +7,7 @@
         <PackageVersion Include="Atya.Foundation.Guards" Version="1.0.2" />
         <PackageVersion Include="Atya.Foundation.Serialization" Version="1.0.0" />
         <PackageVersion Include="Atya.Foundation.Time" Version="1.0.0" />
-        <PackageVersion Include="Atya.Messaging.Abstractions" Version="1.0.0" />
+        <PackageVersion Include="Atya.Messaging.Abstractions" Version="1.1.0" />
     </ItemGroup>
     <ItemGroup Label="Benchmarking">
         <PackageVersion Include="BenchmarkDotNet" Version="0.15.8" />

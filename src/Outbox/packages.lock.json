@@ -26,6 +26,16 @@
         "resolved": "1.1.0",
         "contentHash": "vWSyW0u93lQTDN32fJmPBL+8vPcPCUxkM5nJ+lKFlAjrA0KhDQN8Gg/CQwxrUgVQ4mnDy8oIo9wrA0DXLqFykg=="
       },
+      "Atya.Messaging.Abstractions": {
+        "type": "Direct",
+        "requested": "[1.1.0, )",
+        "resolved": "1.1.0",
+        "contentHash": "DG0hLQDqpShDBirsarn2eB1EfWBgJPTkoVPxbdS4PDtLDbVlglH62gIZtGb+CHf8MYOzq3xzvN5pU4WRT/u0ag==",
+        "dependencies": {
+          "Atya.Foundation.Abstractions": "1.0.4",
+          "Atya.Foundation.Guards": "1.0.2"
+        }
+      },
       "Microsoft.SourceLink.GitHub": {
         "type": "Direct",
         "requested": "[10.0.300, )",
@@ -65,13 +75,6 @@
         "type": "Transitive",
         "resolved": "10.0.8",
         "contentHash": "+dJsbPJ3FyUbTZNplFj0RCKePFizmv6ewDV46JE9q/IVH4c3xTCftHfHelLsAKf0jryIPqgMb5GpS0x7TAY3mg=="
-      },
-      "Atya.Messaging.Abstractions": {
-        "type": "Project",
-        "dependencies": {
-          "Atya.Foundation.Abstractions": "[1.0.4, )",
-          "Atya.Foundation.Guards": "[1.0.2, )"
-        }
       }
     }
   }
