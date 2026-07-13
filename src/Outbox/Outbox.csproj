@@ -12,11 +12,11 @@
     <PackageTags>dotnet;atya;messaging;outbox;reliability</PackageTags>
     <RepositoryUrl>https://github.com/AtyaLibraries/Messaging.Outbox</RepositoryUrl>
     <PackageProjectUrl>$(RepositoryUrl)</PackageProjectUrl>
-    <!-- Set PackageValidationBaselineVersion to the last stable package version after first stable release. -->
-    <!-- <PackageValidationBaselineVersion>1.0.0</PackageValidationBaselineVersion> -->
+    <PackageValidationBaselineVersion>1.0.0</PackageValidationBaselineVersion>
 
     <!-- MinVer derives the version from git tags (e.g. tag `v1.2.3` -> 1.2.3). -->
     <MinVerTagPrefix>v</MinVerTagPrefix>
+    <MinVerMinimumMajorMinor>1.0</MinVerMinimumMajorMinor>
     <MinVerDefaultPreReleaseIdentifiers>alpha.0</MinVerDefaultPreReleaseIdentifiers>
     <NoWarn Condition="'$(RepositoryUrl)' != '' And $(RepositoryUrl.Contains('__'))">$(NoWarn);CA1707;SA1300</NoWarn>
   </PropertyGroup>
